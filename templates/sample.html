@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Image Recognition</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/sample.css">
+</head>
+<body>
+    <!--section-1-start-->
+    <section >
+        <!--header-start-->
+        <header class="main-header pt-3">
+            <div class="container">
+                <nav class="navbar navbar-expand-md bg-light navbar-light">
+                    <!-- Brand -->
+                    <div class="logo">
+                        <img src="/static/Images/logo.png" alt="logo">
+                    </div>
+                   
+                  
+                    <!-- Toggler/collapsibe Button -->
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                  
+                    <!-- Navbar links -->
+                    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                      <ul class="navbar-nav">
+                        <li class="nav-item">
+                          <a class="nav-link" href="">Image Recognition</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="img_recog">How to use</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="#">API</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="#">FAQ</a>
+                          </li>
+                      </ul>
+                    </div>
+                  </nav>
+            </div>
+        </header>
+        <!--header-end-->
+    </section>
+    <section class="main-section">
+      <div class="main-content-section">
+        
+        <div class="container mt-5">
+            <div class="aiml-content">
+                <div class="row align-center">
+                    <div class="col-md-6">
+                        <div class="sample-content">
+                            {% if x %}
+                            <img src="/static/Images/image-recognition.png" alt="">
+                            {% else %}
+                            <img src={{pred_img}} alt="">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="sample-details mt-5">
+                            <h2>No of Persons</h2>
+                            <hr>
+                            <ul>
+                                {% if person_count <= 1 %}
+                                <li>{{ person_count }} <span>Person in the Image</span></li>
+                                {% else %}
+                                <li>{{ person_count }} <span>Persons in the Image</span></li>
+                                {% endif %}
+
+                            </ul>
+                        </div>
+                        <div class="sample-details mt-3">
+                            <h2>Age</h2>
+                            <hr>
+                            <ul>
+                                {% if age.0 <= 1 %}
+                                <li>0 TO 2 Age - <span>{{ age.0}} Person</span></li>
+                                {% else %}
+                                <li>0 TO 2 Age - <span>{{ age.0}} Persons</span></li>
+                                {% endif %}
+                                {% if age.1 <= 1 %}
+                                <li>4 TO 6 Age - <span>{{ age.1}} Person</span></li>
+                                {% else %}
+                                <li>4 TO 6 Age - <span>{{ age.1}} Persons</span></li>
+                                {% endif %}
+                                {% if age.2 <= 1 %}
+                                <li>8 TO 12 Age - <span>{{ age.2}} Person</span></li>
+                                {% else %}
+                                <li>8 TO 12 Age - <span>{{ age.2}} Persons</span></li>
+                                {% endif %}
+                                {% if age.3 <= 1 %}
+                                <li>15 TO 20 Age - <span>{{ age.3}} Person</span></li>
+                                {% else %}
+                                <li>15 TO 20 Age - <span>{{ age.3}} Persons</span></li>
+                                {% endif %}
+                                {% if age.4 <= 1 %}
+                                <li>25 TO 32 Age - <span>{{ age.4}} Person</span></li>
+                                {% else %}
+                                <li>25 TO 32 Age - <span>{{ age.4}} Persons</span></li>
+                                {% endif %}
+                                {% if age.5 <= 1 %}
+                                <li>38 TO 43 Age - <span>{{ age.5}} Person</span></li>
+                                {% else %}
+                                <li>38 TO 43 Age - <span>{{ age.5}} Persons</span></li>
+                                {% endif %}
+                                {% if age.6 <= 1 %}
+                                <li>48 TO 53 Age - <span>{{ age.6}} Person</span></li>
+                                {% else %}
+                                <li>48 TO 53 Age - <span>{{ age.6}} Persons</span></li>
+                                {% endif %}
+                                {% if age.7 <= 1 %}
+                                <li>60 TO 100 Age - <span>{{ age.7}} Person</span></li>
+                                {% else %}
+                                <li>60 TO 100 Age - <span>{{ age.7}} Persons</span></li>
+                                {% endif %}
+
+                            </ul>
+                        </div>
+                        <div class="sample-details mt-5">
+                            <h2>Gender</h2>
+                            <hr>
+                            <ul>
+                                {% if gender.0 <= 1 %}
+                                <li>Male - <span>{{ gender.0 }} Person</span></li>
+                                {% else %}
+                                <li>Male - <span>{{ gender.0 }} Persons</span></li>
+                                {% endif %}
+                                {% if gender.1 <= 1 %}
+                                <li>Female - <span>{{ gender.1 }} Person</span></li>
+                                {% else %}
+                                <li>Female - <span>{{ gender.1 }} Persons</span></li>
+                                {% endif %}
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <form action="img_recog" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+    <div class="text-center upload">
+        
+        <div class="upload-box">
+          <div class="drop_box">
+            
+            <input type="file" name='file' accept=".jpg,.jpeg,.png" id="fileID" required>
+            <!--<button class="btn">Upload File</button>-->
+            <!--<p>or Drag & Drop a Image</p>-->
+            <img class="upload-img" src="/static/Images/upload-img.png" alt="">
+            <p>Max file size should be 10MB</p>
+           
+                <input type="email" name="email" placeholder="Enter email upload file" required>
+                <br>
+                <br>
+                <input type="submit" class="btn" value="Upload">
+            
+            
+            
+         </div>
+        </div>
+    </div>
+    </form>
+    </section>
+        <!--section-1-end-->
+        
+<section class="footer-section py-5">
+  <div class="container">
+      <div class="row">
+          <div class="col-md-4">
+              <div class="footer-menu">
+                <img src="/static/Images/logo.png">
+                  <p>We Provide you a Industry experts to build your project.</p>
+                  
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="footer-menu">
+                  <h2>Explore</h2>
+                  <ul>
+                      <li><a href="#">Image Recognition</a></li>
+                      <li><a href="#">How to use</a></li>
+                      <li><a href="#">API</a></li>
+                      <li><a href="#">FAQ</a></li>
+                  </ul>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="footer-menu">
+                  <h2>Contact Us</h2>
+                  <ul>
+                      <li>
+                          <img class="footer-icon pr-3" src="/static/Images/Location.png">
+                          <span>
+                              <a>United States </a>
+                              <a class="erode-location">United Kingdom</a>
+                          </span>
+
+                          <img>
+                      </li>
+                      <li>
+                          <img class="footer-icon pr-3" src="/static/Images/Message.png"><span>
+                              <a href="mailto:info@innovsoft.tech">Support@Img.com</a>
+                          </span><img>
+                      </li>
+                      <li>
+                          <img class="footer-icon pr-3" src="/static/Images/Call.png"><span>
+                              <a href="tel:8870007553">+91-6781083722</a>
+                          </span><img>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="bottom-section">
+      <div class="container">
+          <div class="footer-border"></div>
+          <div class="rights">
+              <h2>Copy Rights Reserved by IMG Recognition 2022</h2>
+          </div>
+      </div>
+  </div>
+</section>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    var activeNavItem = $('.nav-item');
+
+activeNavItem.click(function(){
+  activeNavItem.removeClass('active');
+  $(this).addClass('active');  
+});
+</script>
+<!--<script>
+  const dropArea = document.querySelector(".drop_box"),
+  button = dropArea.querySelector("button"),
+  dragText = dropArea.querySelector("header"),
+  input = dropArea.querySelector("input");
+let file;
+var filename;
+
+button.onclick = () => {
+  input.click();
+};
+
+input.addEventListener("change", function (e) {
+  var fileName = e.target.files[0].name;
+  let filedata = `
+  <form action="img_recog" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form">
+    <h4>${fileName}</h4>
+    <input type="email" name="email" placeholder="Enter email upload file">
+    <button class="btn">Upload</button>
+    </div>
+    </form>`;
+  dropArea.innerHTML = filedata;
+});
+
+</script>-->
+
+</html>
