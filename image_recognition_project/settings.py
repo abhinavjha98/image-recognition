@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["10.0.0.5","20.98.252.150","20.39.59.160","aidemo.kredservices.com","20.127.255.208 ","74.235.218.4"]
 
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -35,11 +36,14 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'corsheaders',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'image_recognition'
 ]
-
+CORS_ALLOWED_ORIGINS = [
+    "https://aidemo.kredservices.com"
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -48,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+     'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'image_recognition_project.urls'
