@@ -15,8 +15,8 @@ genderModel = "./static/gender_net.caffemodel"
 ageProto = "./static/age_deploy.prototxt"
 ageModel = "./static/age_net.caffemodel"
 genderList = ['Male', 'Female']
-ageList = ['(0-2)', '(4-6)', '(8-12)', '(15-20)',
-           '(25-32)', '(38-43)', '(48-53)', '(60-100)']
+ageList = ['(0-3)', '(4-7)', '(8-14)', '(15-25)',
+           '(26-42)', '(43-50)', '(51-59)', '(60-100)']
 
 MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
 
@@ -43,7 +43,11 @@ def highlightFace(net, frameOpencvDnn):
     return faceBoxes
 
 def handle_uploaded_file(f):
-    with open('./media/{}'.format(f), 'wb') as destination:
+    global uploaded_image
+    f_u=f.name
+    uploaded_image1=str('{}_{}.{}'.format(f_u.split('.')[0],time.time(),f_u.split('.')[-1]))
+    uploaded_image=uploaded_image1
+    with open('./media/{}'.format(uploaded_image1), 'wb') as destination:
         for chunk in f.chunks():
             destination.write(chunk) 
 
@@ -64,8 +68,8 @@ def homepage(request):
             email=request.POST['email']
             x=2
         if x==2:
-            img = cv2.imread('./media/'+'{}'.format(file_name))
-            img_crop = cv2.imread('./media/'+'{}'.format(file_name))
+            img = cv2.imread('./media/{}'.format(uploaded_image))
+            img_crop = cv2.imread('./media/{}'.format(uploaded_image))
             h, w, c = img.shape
             if h > 3000:
                 img = cv2.resize(img, (int((w*50)/100), int((h*50)/100)))
@@ -80,11 +84,11 @@ def homepage(request):
                 y1 = int(result['ymin'])
                 x2 = int(result['xmax'])
                 y2 = int(result['ymax'])
-                if cs == 0:
+                if cs == 0 and con>0.35:
                     count += 1
                     imgx = img_crop[y1:y2, x1:x2]
-                    if os.path.isfile('./media/{}'.format(file_name))==False:
-                        continue
+                    #if os.path.isfile('/media/'+'{}'.format(uploaded_image))==False:
+                    #   continue
                     if h > 1000:
                         text = "Person{} {}".format(count, int(con*100))
                         img = cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0),5)
@@ -129,19 +133,19 @@ def homepage(request):
                     elif gender=='Female':
                         gen[1]+=1
 
-                    if age=='(0-2)':
+                    if age=='(0-3)':
                         age_no[0]+=1
-                    elif age=='(4-6)':
+                    elif age=='(4-7)':
                         age_no[1]+=1
-                    elif age=='(8-12)':
+                    elif age=='(8-14)':
                         age_no[2]+=1
-                    elif age=='(15-20)':
+                    elif age=='(15-25)':
                         age_no[3]+=1
-                    elif age=='(25-32)':
+                    elif age=='(26-42)':
                         age_no[4]+=1
-                    elif age=='(38-43)':
+                    elif age=='(43-50)':
                         age_no[5]+=1
-                    elif age=='(48-53)':
+                    elif age=='(51-59)':
                         age_no[6]+=1
                     elif age=='(60-100)':
                         age_no[7]+=1
@@ -188,10 +192,11 @@ def homepage(request):
                 img=cv2.resize(img,(600,800))
             else: 
                 img=cv2.resize(img,(800,600))
-            cv2.imwrite("./predicted_image_{}".format(file_name), img)
-            cv2.imwrite("./media/predicted_image_{}".format(file_name), img)
-            url1 = "./predicted_image_{}".format(file_name)
-            url2 = "./media/predicted_image_{}".format(file_name)
+            current_time=time.time()
+            cv2.imwrite("./predicted_image_{}.{}".format(current_time,file_name.name.split('.')[-1]), img)
+            cv2.imwrite("./media/predicted_image_{}.{}".format(current_time,file_name.name.split('.')[-1]), img)
+            url1 = "./predicted_image_{}.{}".format(current_time,file_name.name.split('.')[-1])
+            url2 = "./media/predicted_image_{}.{}".format(current_time,file_name.name.split('.')[-1])
             data=img_recog_table(uploaded_Img=file_name,email=email,processed_image=url1)
             data.save() 
             end_time=time.time()
@@ -222,8 +227,8 @@ def img_recognition(request):
             email=request.POST['email']
             x=2
         if x==2:
-            img = cv2.imread('./media/'+'{}'.format(file_name))
-            img_crop = cv2.imread('./media/'+'{}'.format(file_name))
+            img = cv2.imread('./media/'+'{}'.format(uploaded_image))
+            img_crop = cv2.imread('./media/'+'{}'.format(uploaded_image))
             h, w, c = img.shape
             if h > 3000:
                 img = cv2.resize(img, (int((w*50)/100), int((h*50)/100)))
@@ -238,11 +243,11 @@ def img_recognition(request):
                 y1 = int(result['ymin'])
                 x2 = int(result['xmax'])
                 y2 = int(result['ymax'])
-                if cs == 0:
+                if cs == 0 and con>0.35:
                     count += 1
                     imgx = img_crop[y1:y2, x1:x2]
-                    if os.path.isfile('./media/{}'.format(file_name))==False:
-                        continue
+                    #if os.path.isfile('./media/'+'{}'.format(uploaded_image))==False:
+                    #    continue
                     if h > 1000:
                         text = "Person{} {}".format(count, int(con*100))
                         img = cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0),5)
@@ -287,19 +292,19 @@ def img_recognition(request):
                     elif gender=='Female':
                         gen[1]+=1
 
-                    if age=='(0-2)':
+                    if age=='(0-3)':
                         age_no[0]+=1
-                    elif age=='(4-6)':
+                    elif age=='(4-7)':
                         age_no[1]+=1
-                    elif age=='(8-12)':
+                    elif age=='(8-14)':
                         age_no[2]+=1
-                    elif age=='(15-20)':
+                    elif age=='(15-25)':
                         age_no[3]+=1
-                    elif age=='(25-32)':
+                    elif age=='(26-42)':
                         age_no[4]+=1
-                    elif age=='(38-43)':
+                    elif age=='(43-50)':
                         age_no[5]+=1
-                    elif age=='(48-53)':
+                    elif age=='(51-59)':
                         age_no[6]+=1
                     elif age=='(60-100)':
                         age_no[7]+=1
@@ -346,10 +351,11 @@ def img_recognition(request):
                 img=cv2.resize(img,(600,800))
             else: 
                 img=cv2.resize(img,(800,600))
-            cv2.imwrite("./predicted_image_{}".format(file_name), img)
-            cv2.imwrite("./media/predicted_image_{}".format(file_name), img)
-            url1 = "./predicted_image_{}".format(file_name)
-            url2 = "./media/predicted_image_{}".format(file_name)
+            curr_time=time.time()
+            cv2.imwrite("./predicted_image_{}.{}".format(curr_time,file_name.name.split('.')[-1]), img)
+            cv2.imwrite("./media/predicted_image_{}.{}".format(curr_time,file_name.name.split('.')[-1]), img)
+            url1 = "./predicted_image_{}.{}".format(curr_time,file_name.name.split('.')[-1])
+            url2 = "./media/predicted_image_{}.{}".format(curr_time,file_name.name.split('.')[-1])
             data=img_recog_table(uploaded_Img=file_name,email=email,processed_image=url1)
             data.save() 
             end_time=time.time()
